@@ -129,8 +129,8 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Authors
 
-- [Your Name](https://github.com/yourusername)
-- [Other Contributors](https://github.com/yourusername)
+- [Regan Maharjan - Group 7 - CIS 580](https://github.com/rayraycodes)
+- [Other Contributors](https://github.com/rayraycodes)
 
 ## Acknowledgments
 
