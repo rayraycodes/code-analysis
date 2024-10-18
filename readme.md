@@ -33,8 +33,8 @@ Follow these steps to set up the project:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/code-analysis-tool.git
-cd code-analysis-tool
+git clone https://github.com/rayraycodes/code-analysis.git
+cd code-analysis
 ```
 
 ### 2. Set Up the Back-End (Flask)
