@@ -8,7 +8,7 @@ This project is a code analysis tool that helps developers review code by identi
 ```
 ├── app.py                  # Main Flask application
 ├── static_analysis.py      # Code analysis logic for detecting code smells
-├── code-analysis/          # React front-end for the code analysis tool
+├── code-analysis-front-end/          # React front-end for the code analysis tool
 │   ├── public/             # Static files for the React app
 │   ├── src/                # Source code for the React app
 │   │   ├── components/     # React components
