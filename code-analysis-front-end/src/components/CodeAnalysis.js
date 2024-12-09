@@ -26,24 +26,29 @@ function CodeAnalysis() {
     setError('');
     setReadmeContent('');
     setOpenIssues([]);
-    if (!isValidUrl(repoUrl)) {
-      setError('Invalid URL');
-      return;
-    }
+if (!isValidUrl(repoUrl)) {
+  setError('Invalid URL');
+  return;
+}
 
-    const sanitizedUrl = sanitizeInput(repoUrl);
-    const repoPath = sanitizedUrl.replace('https://github.com/', '');
+const sanitizedUrl = sanitizeInput(repoUrl);
+let repoPath = sanitizedUrl.replace('https://github.com/', '');
 
-    try {
-      const response = await fetch(`https://api.github.com/repos/${repoPath}`, {
-        headers: {
-          'Accept': 'application/vnd.github.v3+json',
-        },
-      });
+// Remove .git suffix if present
+if (repoPath.endsWith('.git')) {
+  repoPath = repoPath.slice(0, -4);
+}
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
+try {
+  const response = await fetch(`https://api.github.com/repos/${repoPath}`, {
+    headers: {
+      'Accept': 'application/vnd.github.v3+json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
 
       const data = await response.json();
       setAnalysisResults([data]);

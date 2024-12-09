@@ -51,8 +51,7 @@ cd code-analysis
    The Flask application should now be running at `http://localhost:5000`.
 
 ### 3. Set Up the Front-End (React)
-
-1. **Navigate to the React app directory**:
+npm install
    ```bash
    cd code-analysis
    ```
