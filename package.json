@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "crypto-browserify": "^3.12.1",
+    "file-saver": "^2.0.5",
+    "nbformat": "^0.0.2",
+    "os-browserify": "^0.3.0",
+    "path-browserify": "^1.0.1",
+    "react-markdown": "^9.0.1"
+  }
+}

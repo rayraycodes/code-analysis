@@ -4,6 +4,9 @@
 /node_modules
 /.pnp
 .pnp.js
+/code-analysis-front-end/node_modules
+/cloned_repos
+/.env
 
 # testing
 /coverage

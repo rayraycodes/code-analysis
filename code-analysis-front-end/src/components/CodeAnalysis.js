@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 function CodeAnalysis() {
   const [repoUrl, setRepoUrl] = useState('');
@@ -6,6 +7,7 @@ function CodeAnalysis() {
   const [readmeContent, setReadmeContent] = useState('');
   const [openIssues, setOpenIssues] = useState([]);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const isValidUrl = (url) => {
     try {
@@ -26,61 +28,30 @@ function CodeAnalysis() {
     setError('');
     setReadmeContent('');
     setOpenIssues([]);
-if (!isValidUrl(repoUrl)) {
-  setError('Invalid URL');
-  return;
-}
+    setAnalysisResults([]);
+    setLoading(true);
+    
+    if (!isValidUrl(repoUrl)) {
+      setError('Invalid URL');
+      setLoading(false);
+      return;
+    }
 
-const sanitizedUrl = sanitizeInput(repoUrl);
-let repoPath = sanitizedUrl.replace('https://github.com/', '');
+    const sanitizedUrl = sanitizeInput(repoUrl);
 
-// Remove .git suffix if present
-if (repoPath.endsWith('.git')) {
-  repoPath = repoPath.slice(0, -4);
-}
-
-try {
-  const response = await fetch(`https://api.github.com/repos/${repoPath}`, {
-    headers: {
-      'Accept': 'application/vnd.github.v3+json',
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
-  }
-
-      const data = await response.json();
-      setAnalysisResults([data]);
-
-      const readmeResponse = await fetch(`https://api.github.com/repos/${repoPath}/readme`, {
-        headers: {
-          'Accept': 'application/vnd.github.v3+json',
-        },
+    try {
+      const response = await axios.post('http://localhost:5000/api/analyze', {
+        repoUrl: sanitizedUrl,
       });
 
-      if (!readmeResponse.ok) {
-        throw new Error('Failed to fetch README');
-      }
-
-      const readmeData = await readmeResponse.json();
-      const decodedContent = atob(readmeData.content);
-      setReadmeContent(decodedContent);
-
-      const issuesResponse = await fetch(`https://api.github.com/repos/${repoPath}/issues?state=open`, {
-        headers: {
-          'Accept': 'application/vnd.github.v3+json',
-        },
-      });
-
-      if (!issuesResponse.ok) {
-        throw new Error('Failed to fetch issues');
-      }
-
-      const issuesData = await issuesResponse.json();
-      setOpenIssues(issuesData);
+      const data = response.data;
+      setAnalysisResults(data.analysisResults);
+      setReadmeContent(data.readmeContent);
+      setOpenIssues(data.openIssues);
     } catch (error) {
       setError('Failed to fetch analysis results');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -90,15 +61,18 @@ try {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      height: '100vh',
+      minHeight: '100vh',
       textAlign: 'center',
       backgroundColor: '#f5f5f5',
-      padding: '10px',
+      padding: '20px',
     },
     input: {
       margin: '10px 0',
       padding: '10px',
-      width: '300px',
+      width: '80%',
+      maxWidth: '400px',
+      borderRadius: '5px',
+      border: '1px solid #ccc',
     },
     button: {
       padding: '10px 20px',
@@ -107,12 +81,31 @@ try {
       border: 'none',
       borderRadius: '5px',
       cursor: 'pointer',
+      marginTop: '10px',
     },
-    results: {
-      listStyleType: 'none',
+    resultsContainer: {
+      textAlign: 'left',
+      maxWidth: '1400px',
+      margin: '20px auto',
+      padding: '10px',
+      backgroundColor: '#fff',
+      border: '1px solid #ddd',
+      borderRadius: '5px',
+      overflow: 'auto',
+      fontSize: '1rem',
+    },
+    resultItem: {
+      width: '100%',
+      backgroundColor: '#fff',
+      border: '1px solid #ddd',
+      borderRadius: '5px',
+      padding: '10px',
+      marginBottom: '10px',
+      textAlign: 'left',
     },
     error: {
       color: 'red',
+      marginTop: '10px',
     },
     readme: {
       textAlign: 'left',
@@ -126,8 +119,8 @@ try {
     },
     issues: {
       textAlign: 'left',
-      maxWidth: '800px', // Increased width
-      maxHeight: '400px', // Added max height
+      maxWidth: '800px',
+      maxHeight: '400px',
       margin: '20px auto',
       padding: '10px',
       backgroundColor: '#fff',
@@ -135,6 +128,26 @@ try {
       borderRadius: '5px',
       overflow: 'auto',
     },
+    issueItem: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+      marginBottom: '10px',
+    },
+    issueTitle: {
+      fontWeight: 'bold',
+    },
+    loading: {
+      fontSize: '20px',
+      fontWeight: 'bold',
+      marginTop: '10px',
+    },
+  };
+  
+  const preprocessText = (text) => {
+    return text
+      .replace(/\*\*(.*?)\*\*/g, '$1') // Make text between ** bold
+      .replace(/###\s*(.*?)/g, '$1'); // Make text after ### bold
   };
 
   return (
@@ -148,22 +161,18 @@ try {
         onChange={(e) => setRepoUrl(e.target.value)}
       />
       <button style={styles.button} onClick={analyzeRepo}>Analyze</button>
+      {loading && <p style={styles.loading}>Loading...</p>}
       {error && <p style={styles.error}>{error}</p>}
-      <h3>Analysis Results</h3>
-      <ul style={styles.results}>
-        {analysisResults.map((repo, index) => (
-          <li key={index}>
-            <strong>{repo.full_name}</strong>: {repo.description} <br />
-            <strong>Stars:</strong> {repo.stargazers_count} <br />
-            <strong>Forks:</strong> {repo.forks_count} <br />
-            <strong>Open Issues:</strong> {repo.open_issues_count} <br />
-            <strong>Primary Language:</strong> {repo.language} <br />
-            <strong>Owner:</strong> {repo.owner.login} <br />
-            <strong>Created At:</strong> {new Date(repo.created_at).toLocaleDateString()} <br />
-            <strong>Last Updated:</strong> {new Date(repo.updated_at).toLocaleDateString()} <br />
-          </li>
-        ))}
-      </ul>
+      {analysisResults.length > 0 && (
+        <div style={styles.resultsContainer}>
+          <h3>Analysis Results</h3>
+          {analysisResults.map((result, index) => (
+            <div key={index} style={styles.resultItem}>
+              <pre>{preprocessText(result)}</pre>
+            </div>
+          ))}
+        </div>
+      )}
       {readmeContent && (
         <div style={styles.readme}>
           <h3>README</h3>
@@ -173,10 +182,10 @@ try {
       {openIssues.length > 0 && (
         <div style={styles.issues}>
           <h3>Open Issues</h3>
-          <ul>
+          <ul style={styles.results}>
             {openIssues.map((issue, index) => (
-              <li key={index}>
-                <strong>{issue.title}</strong> by {issue.user.login} <br />
+              <li key={index} style={styles.issueItem}>
+                <span style={styles.issueTitle}>{issue.title}</span> by {issue.user.login} <br />
                 {issue.body}
               </li>
             ))}
