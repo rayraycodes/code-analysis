@@ -1,6 +1,6 @@
-# Code Analysis Tool
+# Github Project Code Analysis Tool
 
-The Code Analysis Tool is designed to assist developers in reviewing and analyzing code from GitHub repositories. It identifies common code issues, provides actionable feedback, and offers insights into project structure through an intuitive front-end and a robust back-end application.
+This Tool is designed to assist developers in reviewing and analyzing code from GitHub repositories. It identifies common code issues, provides actionable feedback, and offers insights into project structure through an intuitive front-end and a robust back-end application.
 
 ## Project Structure
 
