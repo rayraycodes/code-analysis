@@ -152,7 +152,7 @@ function CodeAnalysis() {
 
   return (
     <div style={styles.container}>
-      <h2>Code Analysis Tool</h2>
+      <h2>Github Project Analysis Tool</h2>
       <input
         style={styles.input}
         type="text"
