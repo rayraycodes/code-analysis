@@ -1,12 +1,14 @@
 # GitHub Project Code Analysis Tool
 
-This Tool is designed to assist developers in reviewing and analyzing code from GitHub repositories. It identifies common code issues, provides actionable feedback, and offers insights into project structure through an intuitive front-end and a robust back-end application.
+The Code Analysis Tool is designed to assist developers in reviewing and analyzing code from GitHub repositories. It identifies common code issues, provides actionable feedback, and offers insights into project structure through an intuitive front-end and a robust back-end application.
 
 ## Project Structure
 
 ```
 ├── app.py                  # Main Flask application
 ├── static_analysis.py      # Logic for static code analysis
+├── bug_prediction.ipynb    # Jupyter Notebook for bug prediction analysis
+├── nodel.ipynb             # Jupyter Notebook for additional data modeling
 ├── code-analysis-frontend/          # React-based front-end application
 │   ├── public/             # Static assets for the React app
 │   ├── src/                # Source code for the React app
@@ -24,6 +26,7 @@ Ensure you have the following installed before setting up the project:
 
 - **Python** (3.6 or higher)
 - **Node.js** and **npm** (Node Package Manager)
+- **OpenAI API Key**: Obtain an API key from [OpenAI](https://platform.openai.com/signup/) and set it in your environment variables.
 
 ## Installation
 
@@ -36,12 +39,18 @@ cd code-analysis
 
 ### Step 2: Set Up the Back-End (Flask)
 
-1. **Install Dependencies:**
+1. **Set the OpenAI API Key:**
+   - Create a `.env` file in the project root directory and add your OpenAI API key:
+     ```
+     OPENAI_API_KEY=your_openai_api_key
+     ```
+
+2. **Install Dependencies:**
    ```bash
    pip install flask pylint
    ```
 
-2. **Run the Flask Application:**
+3. **Run the Flask Application:**
    ```bash
    python app.py
    ```
@@ -73,7 +82,7 @@ cd code-analysis
    ```
 
 2. **Start the React Front-End:**
-   Navigate to the `code-analysis-frontend` directory and run:
+   Navigate to the `code-analysis-front-end` directory and run:
    ```bash
    npm start
    ```
@@ -82,6 +91,10 @@ cd code-analysis
    - Open your browser and go to `http://localhost:3000`.
    - Enter a GitHub repository URL in the input field and click "Analyze".
    - The tool will perform static analysis and display results, including code feedback, project details, and open issues.
+
+4. **Run Jupyter Notebooks for Advanced Analysis:**
+   - Open the `bug_prediction.ipynb` or `nodel.ipynb` notebook using Jupyter Notebook.
+   - These notebooks contain advanced models for bug prediction and data modeling.
 
 ## Key Components
 
@@ -95,6 +108,10 @@ cd code-analysis
 - **React Front-End (`code-analysis-frontend/`)**:
   - Provides an interactive user interface for analyzing repositories and viewing results.
   - Displays feedback, README content, and open issues in a structured format.
+
+- **Jupyter Notebooks (`bug_prediction.ipynb`, `nodel.ipynb`)**:
+  - `bug_prediction.ipynb`: Implements bug prediction analysis with data science methods.
+  - `nodel.ipynb`: Focuses on additional modeling and exploratory data analysis.
 
 ## Running Tests
 
